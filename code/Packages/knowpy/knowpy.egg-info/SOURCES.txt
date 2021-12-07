@@ -1,0 +1,7 @@
+setup.py
+knowpy/__init__.py
+knowpy.egg-info/PKG-INFO
+knowpy.egg-info/SOURCES.txt
+knowpy.egg-info/dependency_links.txt
+knowpy.egg-info/requires.txt
+knowpy.egg-info/top_level.txt

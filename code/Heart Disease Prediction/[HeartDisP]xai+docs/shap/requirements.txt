@@ -1,0 +1,6 @@
+bottle
+more_itertools==8.8.0
+
+pycaret[full]==2.3.1
+psutil==5.8.0
+numpy==1.20.3

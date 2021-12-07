@@ -1,0 +1,99 @@
+body {
+	font-size: 18px;
+    overflow-wrap: break-word;
+}
+
+#initial_explanans .link:after {
+    font-family: FontAwesome;
+    content: "\f05a";
+    display:inline-block;
+    position: relative;
+    top:-5px;
+    font-size: 75%;
+}
+
+.template_tree .link:after {
+    content: "" !important;
+    top: 0px !important;
+    font-size: 0% !important;
+}
+
+.detail_btn {
+	color: blue;
+	text-decoration: underline;
+	cursor: pointer;
+}
+
+.siteBody {
+    padding: 2% 5% 0 5%;
+}
+
+#appIntroDesc {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+}
+
+#appCustomerIDForm {
+    width: 50%;
+    text-align: right;
+    display: inline-block;
+    color: white;
+    line-height: inherit;
+    white-space: nowrap;
+}
+
+#appCustomerIDForm form {
+    margin-block-end: 0;
+}
+
+#appTitle {
+    width: 50%;
+    text-align: left;
+    display: inline-block;
+    color: white;
+    padding-top: .3125rem;
+    padding-bottom: .3125rem;
+    margin-right: 1rem;
+    font-size: 1.25rem;
+    line-height: inherit;
+    white-space: nowrap;
+}
+
+#appWelcome {
+    /*text-decoration: underline;*/
+    text-align: center;
+}
+
+#appIntroTitle {
+    font-size: larger;
+}
+
+#appIntroImg {
+    padding: 5px;
+    margin: 5px;
+    width: 80px;
+    height: 100px;
+    vertical-align: middle;
+    border-style: none;
+}
+
+#appOutcome {
+    border-style: solid;
+    border-color: #45743A;
+    padding: 1rem;
+    white-space: nowrap;
+}
+
+#customerTitle {
+    font-size: 1.25rem;
+}
+
+#expansionModal .modal-content {
+    min-width: fit-content;
+}
+
+#header .link {
+  color: white !important; 
+}

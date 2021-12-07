@@ -1,0 +1,11 @@
+Metadata-Version: 1.2
+Name: knowpy
+Version: 1.0
+Summary: A plugin for extracting knowledge out of natural language documents.
+Home-page: https://www.unibo.it/sitoweb/francesco.sovrano2/en
+Author: Francesco Sovrano
+Author-email: cesco.sovrano@gmail.com
+License: MIT
+Description: UNKNOWN
+Platform: UNKNOWN
+Requires-Python: >=3.6

@@ -1,0 +1,9 @@
+bottle
+
+tensorflow==1.14.0
+pandas
+keras==2.0.8
+matplotlib
+scikit-learn
+aix360==0.1.0
+h5py==2.10.0

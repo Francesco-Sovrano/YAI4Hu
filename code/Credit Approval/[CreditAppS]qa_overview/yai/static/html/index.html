@@ -1,0 +1,114 @@
+<html>
+	<head>
+		<!-- Add Bootstrap and Bootstrap-Vue CSS to the <head> section -->
+		<link type="text/css" rel="stylesheet" href="/resources/static/lib/bootstrap-4.5.2.min.css"/>
+		<link type="text/css" rel="stylesheet" href="/resources/static/lib/bootstrap-vue-2.16.0.min.css"/>
+		<!--FontAwesome import-->
+		<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+		<!-- App -->
+		<link type="text/css" rel="stylesheet" href="/resources/static/style.css">
+		<link type="text/css" rel="stylesheet" href="/resources/static/tree.css">
+	</head>
+	<body>
+		<div id="app" class="container-fluid siteBody">
+			<b-modal size="lg" v-model="show_overview_modal" scrollable hide-header hide-footer>
+				<b-tabs active-tab-class="modal-dialog-scrollable modal-body">
+					<overview 
+						v-for="(card,i) in cards" 
+						:key="card.uri" 
+						:uri="card.uri" 
+						:label="card.label" 
+						:active_fn="() => i==current_card_index"
+						:close_fn="() => {cards.splice(i,1); (cards.length>0)?null:show_overview_modal=false;}"
+						:onclick_fn="() => current_card_index=i"
+					></overview>
+				</b-tabs>
+			</b-modal>
+			<div class="navbar sticky-top navbar-expand navbar-dark bg-dark" id="header">
+				<div id="appTitle" v-html="application.name"></div>
+				<!-- <div id="appCustomerIDForm">
+					{{loader.label}}
+					<input v-model.number="loader.value" type="number" v-on:change="getExplanation" required>
+				</div> -->
+			</div>
+			<br/>
+			<div id="initial_explanans">
+				<div id='appWelcome'>
+					<h1>
+						<span v-html="application.welcome"></span> <i>{{getCustomerName(loader.value)}}</i> 
+					</h1>
+				</div>
+				<hr flex/>
+				<answer :input_placeholder="application.question_input_placeholder"></answer>
+				<hr flex/>
+				<div>
+					<div id="appIntroDesc">
+						<img src="/resources/static/cust.png" id="appIntroImg">
+						<div id="appIntroTitle" class="col">
+							<strong v-html="application.intro.desc1"></strong>
+							<ul id="customerTitle">
+								<li v-for="sub in application.intro.subdesc1" v-html="sub"></li>
+							</ul>
+						</div>
+					</div>
+					<hr flex/>
+					<strong v-show="loader.loading">{{loader.loading_label}}</strong>
+					<strong v-show="!loader.loading" v-html="application.contrastiveExplanation.resultHeader"></strong>
+					<p id="appOutcome" v-show="!loader.loading" v-html="application.contrastiveExplanation.result"></p>
+					<hr flex/>
+					<div v-show="!loader.loading" id='appContrastiveExplanation'>
+						<div>
+							<strong v-html="application.contrastiveExplanation.factorHeader"></strong>
+							<p></p>
+							<p v-html="application.contrastiveExplanation.factorIncipit"></p>
+							<ul>
+								<li v-for="factor in application.contrastiveExplanation.factors" v-html="factor"></li>
+							</ul>
+						</div>
+						<div v-show="application.contrastiveExplanation.factorsCount > 1">
+							<hr flex/>
+							<strong v-html="application.contrastiveExplanation.importantFactorHeader"></strong>
+							<p></p>
+							<p v-html="application.contrastiveExplanation.importantFactorIncipit"></p>
+							<apexchart type="bar" height="350" :options="application.contrastiveExplanation.chartOptions" :series="application.contrastiveExplanation.chartSeries"></apexchart>
+						</div>
+						<hr flex/>
+						<div id='appIntroSummary'>
+							<strong v-html="application.intro.title"></strong>
+							<p></p>
+							<p v-html="application.intro.summary"></p>
+						</div>
+						<hr flex/>
+					</div>	
+				</div>
+			</div>
+		</div>
+		<footer>
+			<!-- JQUERY -->
+			<script type="text/javascript" src="/resources/static/lib/jquery-3.5.1.min.js"></script>
+			<!-- Add Vue and Bootstrap-Vue JS just before the closing </body> tag -->
+			<script type="text/javascript" src="/resources/static/lib/vue-2.6.11.min.js"></script>
+			<script type="text/javascript" src="/resources/static/lib/bootstrap-vue-2.16.0.min.js"></script>
+			<!-- Load apexcharts -->
+			<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+			<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vue-apexcharts"></script>
+			<!-- Load d3.js -->
+			<script type="text/javascript" src="https://d3js.org/d3.v4.js"></script>
+			
+			<!-- Internal libs, keep this exact order of import -->
+			<script type="text/javascript" src="/resources/static/lib/common_fn.js"></script>
+			<!-- Shared popup stuff, keep this exact order of import -->
+			<script type="text/javascript" src="/resources/static/template/template_lib.js"></script>
+			<script type="text/javascript" src="/resources/static/template/template.js"></script>
+			<script type="text/javascript" src="/resources/static/template/jsonld_handler.js"></script>
+			<!-- Content Script, keep this exact order of import -->
+			<script type="text/javascript" src="/resources/static/stage_builder/item_stage_builder.js"></script>
+			<script type="text/javascript" src="/resources/static/stage_builder/domain_stage_builder.js"></script>
+			<script type="text/javascript" src="/resources/static/stage_builder/api_lib.js"></script>
+			<!-- App, keep this exact order of import -->
+			<script type="text/javascript" src="/resources/static/vue_component/explanation_components.js"></script>
+			<script type="text/javascript" src="/resources/static/app.js"></script>
+		</footer>
+	</body>
+</html>
