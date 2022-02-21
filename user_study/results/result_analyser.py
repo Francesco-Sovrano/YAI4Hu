@@ -7,8 +7,8 @@ import math
 import copy
 
 VERSIONS_TO_INCLUDE = [
-	'NXE',
-	'2EC',
+	# 'NXE',
+	'OSE',
 	'HWN',
 	'YAI4Hu',
 ]
@@ -22,13 +22,13 @@ TASK_TO_CONSIDER = [
 TASK_VERSION_TO_FILENAME = {
 	'CA': {
 		'NXE': 'CA-1',
-		'2EC': 'CA-2',
+		'OSE': 'CA-2',
 		'HWN': 'CA-3',
 		'YAI4Hu': 'CA-4',
 	},
 	'HD': {
 		'NXE': 'HD-1',
-		'2EC': 'HD-2',
+		'OSE': 'HD-2',
 		'HWN': 'HD-3',
 		'YAI4Hu': 'HD-4',
 	},
@@ -37,8 +37,9 @@ TASK_VERSION_TO_FILENAME = {
 SCORES_TO_SHOW = [
 	'Satisfaction',
 	'Effectiveness',
-	# 'Elapsed Seconds',
-	'NCS'
+	'Elapsed Seconds',
+	# 'Learnability',
+	# 'NCS'
 ]
 
 QUESTION_TYPE_FILTER = set([
@@ -75,8 +76,8 @@ SHOW_FLIERS = True
 # SECONDS_LIMIT = 40*60
 SCATTER_PLOT_NCS = False
 
-MIN_CORRECT_ANSWERS = 0
-ATTENTION_CHECK = True
+MIN_CORRECT_ANSWERS = 1
+ATTENTION_CHECK = False
 
 is_empty = lambda x: x=='' or math.isnan(x)
 def is_valid_answer(x):
@@ -96,9 +97,12 @@ def time_to_seconds(time):
 	return 60*60*h+60*m+s
 
 def compute_sus_score(sus):
-	x = sum(sus[::2]) - 5
-	y = 25 - sum(sus[1::2])
+	x = sum(sus[::2]) - 5 # Each item’s score contribution ranges from 0 to 4. For items 1, 3, 5, 7, and 9 (the positively worded items) the score contribution is the scale position minus 1.
+	y = 25 - sum(sus[1::2]) # For items 2, 4, 6, 8, and 10 (the negatively worded items), the contribution is 5 minus the scale position.
 	return (x + y)*2.5
+
+def compute_sus_learnability_score(sus):
+	return 50*(5-sus[3] + 5-sus[9])/4
 
 def compute_ncs_score(ncs):
 	x = -sum(ncs[2:4])
@@ -322,6 +326,7 @@ experiment_sus_dict = {}
 ncs_score_dict = {}
 tot_ncs_list = []
 tot_sus_list = []
+tot_sus_learnability_list = []
 tot_eff_list = []
 old_answers_dict = {
 	l: {}
@@ -375,12 +380,12 @@ for row_list in content_list:
 			if ip_address in banned_ips:
 				continue
 
-		filtered_scores = scores
-		filtered_scores = filtered_scores if not QUESTION_TYPE_FILTER else filter_by_question_type(filtered_scores, version)
-		filtered_scores = filtered_scores if not ONLY_ANSWERS_IN_INITIAL_EXPLANANS else filter_by_initial_explanans(filtered_scores, version)
-		filtered_scores = filtered_scores if not ONLY_ANSWERS_NOT_IN_INITIAL_EXPLANANS else filter_by_not_in_initial_explanans(filtered_scores, version)
-		total_score = sum(filtered_scores)
-		if total_score < MIN_CORRECT_ANSWERS:
+		# filtered_scores = scores
+		# filtered_scores = filtered_scores if not QUESTION_TYPE_FILTER else filter_by_question_type(filtered_scores, version)
+		# filtered_scores = filtered_scores if not ONLY_ANSWERS_IN_INITIAL_EXPLANANS else filter_by_initial_explanans(filtered_scores, version)
+		# filtered_scores = filtered_scores if not ONLY_ANSWERS_NOT_IN_INITIAL_EXPLANANS else filter_by_not_in_initial_explanans(filtered_scores, version)
+		# total_score = sum(scores)
+		if sum(scores) < MIN_CORRECT_ANSWERS:
 			continue
 		total_score = get_normalised_total_score(scores, version)
 		
@@ -388,9 +393,11 @@ for row_list in content_list:
 		if len(list(filter(is_empty, sus))) > 0:
 			sus = None
 			sus_score = 0 if len(scores_with_answer) < len(scores) else None
+			sus_learnability_score = 0 if len(scores_with_answer) < len(scores) else None
 		else:
 			sus = format_sus(sus)
 			sus_score = compute_sus_score(sus)
+			sus_learnability_score = compute_sus_learnability_score(sus)
 
 		if 'CA' in version:
 			if len(list(filter(is_empty, ncs))) > 0:
@@ -429,12 +436,15 @@ for row_list in content_list:
 			tot_ncs_list.append(ncs_score)
 		if sus_score is not None:
 			tot_sus_list.append(sus_score)
+		if sus_learnability_score is not None:
+			tot_sus_learnability_list.append(sus_learnability_score)
 		if total_score is not None:
 			tot_eff_list.append(total_score)
 		row_dict = {
 			'Elapsed Seconds': elapsed_seconds,
 			'Effectiveness': total_score,
 			'Satisfaction': sus_score,
+			'Learnability': sus_learnability_score,
 			'NCS': ncs_score,
 			'scale': sus
 		}
@@ -453,12 +463,14 @@ if MERGE_ALL_VERSIONS:
 
 print('Global NCS stats:', json.dumps(get_stat_dict(tot_ncs_list), indent=4))
 print('Global SUS stats:', json.dumps(get_stat_dict(tot_sus_list), indent=4))
+print('Global SUS-Learnability stats:', json.dumps(get_stat_dict(tot_sus_learnability_list), indent=4))
 print('Global EFF stats:', json.dumps(get_stat_dict(tot_eff_list), indent=4))
 
 result_dict = {}
 
 for version, ip_row_dict in experiment_sus_dict.items():
 	sus_list = list(filter(lambda x:x is not None, map(lambda x: x['Satisfaction'], ip_row_dict.values())))
+	sus_learnability_list = list(filter(lambda x:x is not None, map(lambda x: x['Learnability'], ip_row_dict.values())))
 	ncs_list = list(filter(lambda x:x is not None, map(lambda x: x['NCS'], ip_row_dict.values())))
 	sus_scale_list = list(filter(lambda x:x is not None, map(lambda x: x['scale'], ip_row_dict.values())))
 	efficacy_list = list(map(lambda x: x['Effectiveness'], ip_row_dict.values()))
@@ -468,6 +480,7 @@ for version, ip_row_dict in experiment_sus_dict.items():
 		'test_count': len(efficacy_list),
 		'Elapsed Seconds': get_stat_dict(seconds_list),
 		'Satisfaction': get_stat_dict(sus_list),
+		'Learnability': get_stat_dict(sus_learnability_list),
 		'NCS': get_stat_dict(ncs_list),
 		'Effectiveness': get_stat_dict(efficacy_list),
 	}
@@ -517,9 +530,24 @@ def test_hypothesis(a, b):
 		'kruskal': scipy_stats.kruskal(a_value,b_value), # Due to the assumption that H has a chi square distribution, the number of samples in each group must not be too small. A typical rule is that each sample must have at least 5 measurements.
 	}
 
+def test_omnibus_hypothesis(d_value_list):
+	return {
+		# 'wilcoxon': scipy_stats.wilcoxon(a_value,b_value), # The Wilcoxon signed-rank test tests the null hypothesis that two related paired samples come from the same distribution. In particular, it tests whether the distribution of the differences x - y is symmetric about zero. It is a non-parametric version of the paired T-test.
+		# 'best_fit_distribution': best_distribution.name,
+		# 'params': {
+		# 	'a': get_params_description(best_distribution, fit_params_a),
+		# 	'b': get_params_description(best_distribution, fit_params_b)
+		# },
+		'kruskal': scipy_stats.kruskal(*d_value_list), # Due to the assumption that H has a chi square distribution, the number of samples in each group must not be too small. A typical rule is that each sample must have at least 5 measurements.
+	}
+
 print('Testing hypothesis..')
 last_version_name = VERSIONS_TO_INCLUDE[-1]
 for v in TASK_TO_CONSIDER:
+	print(v, 'omnibus', 'Elapsed Seconds', test_omnibus_hypothesis([[y['Elapsed Seconds'] for y in x.values()] for n,x in experiment_sus_dict.items() if v in n]))
+	print(v, 'omnibus', 'Effectiveness', test_omnibus_hypothesis([[y['Effectiveness'] for y in x.values()] for n,x in experiment_sus_dict.items() if v in n]))
+	print(v, 'omnibus', 'Satisfaction', test_omnibus_hypothesis([[y['Satisfaction'] for y in x.values()] for n,x in experiment_sus_dict.items() if v in n]))
+	print(v, 'omnibus', 'Learnability', test_omnibus_hypothesis([[y['Learnability'] for y in x.values()] for n,x in experiment_sus_dict.items() if v in n]))
 	for version_name in VERSIONS_TO_INCLUDE[:-1]:
 		version_value = f'{v}-{version_name}'
 		last_version_value = f'{v}-{last_version_name}'
@@ -533,6 +561,11 @@ for v in TASK_TO_CONSIDER:
 		print(version_value, 'Effectiveness', json.dumps(test_hypothesis( # A low mannwhitneyu pvalue (<0.05) implies that Effectiveness in 'No' are statistically lower than Effectiveness in 'Yes'
 			(list(map(lambda x: x['Effectiveness'], experiment_sus_dict[version_value].values())),version_value),
 			(list(map(lambda x: x['Effectiveness'], experiment_sus_dict[last_version_value].values())),last_version_value),
+		), indent=4))
+
+		print(version_value, 'Learnability', json.dumps(test_hypothesis( # A high pvalue (>0.95) implies that 'Yes' and 'No' have very similar scores
+			(list(filter(lambda x:x is not None, map(lambda x: x['Learnability'], experiment_sus_dict[version_value].values()))),version_value),
+			(list(filter(lambda x:x is not None, map(lambda x: x['Learnability'], experiment_sus_dict[last_version_value].values()))),last_version_value),
 		), indent=4))
 
 		# follows dgamma distribution
@@ -565,7 +598,7 @@ for v in TASK_TO_CONSIDER:
 		df = pd.DataFrame(experiment_sus_dict[f'{v}-{i}'].values())
 		###########
 		if SCATTER_PLOT_NCS:
-			pp = sns.pairplot(data=df, y_vars=['NCS'], x_vars=['Satisfaction','Effectiveness','Elapsed Seconds'])
+			pp = sns.pairplot(data=df, y_vars=['NCS'], x_vars=['Satisfaction','Effectiveness','Elapsed Seconds','Learnability'])
 			plt.savefig(f'scatter_plot_{v}-{i}.png')
 			plt.clf()
 			plt.cla()
