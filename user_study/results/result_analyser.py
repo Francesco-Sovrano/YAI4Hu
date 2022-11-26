@@ -7,8 +7,8 @@ import math
 import copy
 
 VERSIONS_TO_INCLUDE = [
-	# 'NXE',
-	'OSE',
+	'NXE',
+	'2EC',
 	'HWN',
 	'YAI4Hu',
 ]
@@ -22,22 +22,22 @@ TASK_TO_CONSIDER = [
 TASK_VERSION_TO_FILENAME = {
 	'CA': {
 		'NXE': 'CA-1',
-		'OSE': 'CA-2',
+		'2EC': 'CA-2',
 		'HWN': 'CA-3',
 		'YAI4Hu': 'CA-4',
 	},
 	'HD': {
 		'NXE': 'HD-1',
-		'OSE': 'HD-2',
+		'2EC': 'HD-2',
 		'HWN': 'HD-3',
 		'YAI4Hu': 'HD-4',
 	},
 }
 
 SCORES_TO_SHOW = [
-	'Satisfaction',
+	# 'Satisfaction',
 	'Effectiveness',
-	'Elapsed Seconds',
+	# 'Elapsed Seconds',
 	# 'Learnability',
 	# 'NCS'
 ]
@@ -51,17 +51,17 @@ QUESTION_TYPE_FILTER = set([
 ])
 
 ONLY_ANSWERS_IN_INITIAL_EXPLANANS = False
-ONLY_ANSWERS_NOT_IN_INITIAL_EXPLANANS = False
+ONLY_ANSWERS_NOT_IN_INITIAL_EXPLANANS = True
 KEEP_INCOMPLETE = False
 ## no filters on NCS
-# MIN_NCS = None # Min is -10
-# MAX_NCS = None # Max is 20
+MIN_NCS = None # Min is -10
+MAX_NCS = None # Max is 20
 ## with NCS
 # MIN_NCS = -10 # Min is -10
 # MAX_NCS = 20 # Max is 20
 ## with normal NCS
-MIN_NCS = 5 # Lower quartile is 5
-MAX_NCS = 11 # Upper quartile is 11
+# MIN_NCS = 5 # Lower quartile is 5
+# MAX_NCS = 11 # Upper quartile is 11
 
 MIN_SUS = None
 MAX_SUS = None # Median SUS is 42.5
@@ -250,7 +250,7 @@ HD_QUESTIONS_TYPE = [
 	},
 	{
 		'question':"What are the symptoms of high blood pressure?",
-		'types':('what','why'), 
+		'types':('what','why','how'), 
 		'answer_in_initial_explanans':False,
 	},
 	{
