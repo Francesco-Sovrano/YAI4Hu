@@ -1,4 +1,4 @@
-# YAI4Hu
+# YAI4Hu: Explanatory AI for Humans
 Explanatory AI for Humans (YAI4Hu, for short) is a novel pipeline of AI algorithms for the generation of user-centred explanations through the extraction of an explanatory space, intended as all the possible explanations (about something to be explained) reachable by a user through an explanatory process, via a pre-defined set of actions, i.e. open question answering and overviewing. This pipeline is meant to organise the information contained in non-structured documents written in natural language (e.g. web pages, pdf, etc.), allowing efficient information clustering, according to a pre-defined set of archetypal questions (e.g., why, what, how, who, etc.).
 
 More details about this code can be found in the following papers:
