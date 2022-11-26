@@ -40,7 +40,7 @@ pertinence. Each piece of answer consists of an information unit and its summary
 All the information shown inside the modal is annotated as well. This means (for example) that clicking on the taxonomical type of the aspect, the user can open a new card (in a new tab) displaying relevant information about the type, thus being able to explore the explanatory space according to the abstraction policy.
 On the other hand, the simplicity policy is ensured by the “More” and “Less” buttons (that allow to increase/decrease the level of detail of information) and by the fact that not all the words in the explanantia are linked to an overview despite being nodes of the explanatory space.
 
-## Citation
+## Citations
 This code is free. So, if you use this code anywhere, please cite:
 - Francesco Sovrano and Fabio Vitali. Explanatory artificial intelligence (YAI): human-centered explanations of explainable AI and complex data. Data Min Knowl Disc (2022). https://doi.org/10.1007/s10618-022-00872-x
 - Francesco Sovrano and Fabio Vitali. 2022. Generating User-Centred Explanations via Illocutionary Question Answering: From Philosophy to Interfaces. ACM Trans. Interact. Intell. Syst. 12, 4, Article 26 (December 2022), 32 pages. https://doi.org/10.1145/3519265
