@@ -43,9 +43,7 @@ On the other hand, the simplicity policy is ensured by the “More” and “Les
 ## Citation
 This code is free. So, if you use this code anywhere, please cite:
 - Francesco Sovrano and Fabio Vitali. Explanatory artificial intelligence (YAI): human-centered explanations of explainable AI and complex data. Data Min Knowl Disc (2022). https://doi.org/10.1007/s10618-022-00872-x
-```
 - Francesco Sovrano and Fabio Vitali. 2022. Generating User-Centred Explanations via Illocutionary Question Answering: From Philosophy to Interfaces. ACM Trans. Interact. Intell. Syst. 12, 4, Article 26 (December 2022), 32 pages. https://doi.org/10.1145/3519265
-```
 
 BitTeX citations:
 - ```
