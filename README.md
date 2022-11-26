@@ -61,8 +61,7 @@ BitTeX citations:
 	Url = {https://doi.org/10.1007/s10618-022-00872-x},
 	Year = {2022},
 	Bdsk-Url-1 = {https://doi.org/10.1007/s10618-022-00872-x}
-}
-```
+}```
 - ```@article{sovrano2022generating,
 author = {Sovrano, Francesco and Vitali, Fabio},
 title = {Generating User-Centred Explanations via Illocutionary Question Answering: From Philosophy to Interfaces},
