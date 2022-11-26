@@ -2,8 +2,8 @@
 Explanatory AI for Humans (YAI4Hu, for short) is a novel pipeline of AI algorithms for the generation of user-centred explanations through the extraction of an explanatory space, intended as all the possible explanations (about something to be explained) reachable by a user through an explanatory process, via a pre-defined set of actions, i.e. open question answering and overviewing. This pipeline is meant to organise the information contained in non-structured documents written in natural language (e.g. web pages, pdf, etc.), allowing efficient information clustering, according to a pre-defined set of archetypal questions (e.g., why, what, how, who, etc.).
 
 More details about this code can be found in the following papers:
-> ["Explanatory artificial intelligence (YAI): human-centered explanations of explainable AI and complex data"](https://doi.org/10.1007/s10618-022-00872-x)
-> ["Generating User-Centred Explanations via Illocutionary Question Answering: From Philosophy to Interfaces"](https://doi.org/10.1145/3519265)
+> - ["Explanatory artificial intelligence (YAI): human-centered explanations of explainable AI and complex data"](https://doi.org/10.1007/s10618-022-00872-x)
+> - ["Generating User-Centred Explanations via Illocutionary Question Answering: From Philosophy to Interfaces"](https://doi.org/10.1145/3519265)
 
 To evaluate our algorithm, we ran a user-study (whose results are available at [user_study](user_study)) to compare the usability of the explanations generated through our novel pipeline against classical, one-size-fits- all, static XAI-based explanatory systems. The experiment consisted of explaining to more than 60 unique participants a credit approval system (based on a simple Artificial Neural Network and on CEM) and a heart disease predictor (based on XGBoost and TreeShap) in different ways, with different degrees of illocutionary power and different mechanisms for the user to ask their own questions explicitly.
 
