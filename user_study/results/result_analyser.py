@@ -7,7 +7,7 @@ import math
 import copy
 
 VERSIONS_TO_INCLUDE = [
-	'NXE',
+	'XAI',
 	'2EC',
 	'HWN',
 	'YAI4Hu',
@@ -15,19 +15,19 @@ VERSIONS_TO_INCLUDE = [
 MERGE_ALL_VERSIONS = False
 
 TASK_TO_CONSIDER = [
-	'CA',
+	# 'CA',
 	'HD'
 ]
 
 TASK_VERSION_TO_FILENAME = {
 	'CA': {
-		'NXE': 'CA-1',
+		'XAI': 'CA-1',
 		'2EC': 'CA-2',
 		'HWN': 'CA-3',
 		'YAI4Hu': 'CA-4',
 	},
 	'HD': {
-		'NXE': 'HD-1',
+		'XAI': 'HD-1',
 		'2EC': 'HD-2',
 		'HWN': 'HD-3',
 		'YAI4Hu': 'HD-4',

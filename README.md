@@ -20,8 +20,8 @@ Regardless of the tool for explaining that we adopt, or the direction we take to
 This project has been tested on Debian 9 and macOS Mojave 10.14 with Python 3.7.9. 
 
 The file system of this repository is organised as follows:
-- In the [user_study](user_study) directory it is possible to find the results of the user studies discussed in the 2 aforementioned papers.
-- The [code](code) contains the code of 8 different explainers: 4 for the Heart Disease Predictor and 4 for the Credit Approval System. Within each directory it is possible to find a "setup.sh" script to install the software. To run an explainer, execute the following command ```./setup.sh port_num``` where port_num is the number of the port you want the explainer to available on. Once you have ran the "server.sh" script, you access the explainer through your browser at http://localhost:port_num (remember to replace the string port_num with the correct port number you have chosen).
+- In folder [user_study](user_study) it is possible to find the results of the user studies discussed in the 2 aforementioned papers.
+- The folder [code](code) contains the code of 8 different explainers: 4 for the Heart Disease Predictor and 4 for the Credit Approval System. Within each directory it is possible to find a "setup.sh" script to install the software. To run an explainer, execute the following command ```./server.sh port_num``` where port_num is the number of the port you want the explainer to available on. After running the "server.sh" script, you can access the explainer through your browser at http://localhost:port_num (remember to replace the string port_num with the correct port number you have chosen).
 
 **N.B.** Before being able to run the setup.sh scripts you have to install: virtualenv, python3-dev, python3-pip and make. 
 
