@@ -2,7 +2,14 @@ import os
 import re
 import json
 from bs4 import BeautifulSoup
-from tika import parser
+
+# from tika import parser
+from pdfminer.pdfpage import PDFPage
+from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
+from pdfminer.converter import TextConverter
+from pdfminer.layout import LAParams
+import io
+
 import unicodedata
 from more_itertools import unique_everseen
 from knowpy.misc.jsonld_lib import *
@@ -134,16 +141,67 @@ def read_html_file(filename, short_extension=False):
 	return list(unique_everseen(annotated_text_list, key=lambda x: x['text']))
 
 def read_pdf_file(filename): # https://unicodelookup.com
-	file_id = os.path.basename(filename).replace(' ','_')
-	raw = parser.from_file(filename+'.pdf')
-	return [
-		{
-			'text': paragraph.strip(),
-			'id': file_id
-		}
-		for paragraph in raw['content'].split('\n\n')
-		if paragraph
-	]
+	def pdf_to_text(input_file):
+		#### PDFMINER
+		i_f = open(input_file,'rb')
+		resMgr = PDFResourceManager()
+		page_content_list = []
+		for page in PDFPage.get_pages(i_f):
+			retData = io.StringIO()
+			TxtConverter = TextConverter(resMgr,retData, laparams= LAParams())
+			interpreter = PDFPageInterpreter(resMgr,TxtConverter)
+			interpreter.process_page(page)
+			page_content_list.append(retData.getvalue())
+		return page_content_list
+		##########
+		#### TIKA
+		# raw_xml = parser.from_file(input_file, xmlContent=True)
+		# body = raw_xml['content'].split('<body>')[1].split('</body>')[0]
+		# body_without_tag = body.replace("<p>", "").replace("</p>", "\n\n").replace("<div>", "\n\n").replace("</div>","").replace("<p />","\n\n")
+		# body_without_tag = body_without_tag.split("""<div class="annotation">""")[0]
+		# text_pages = body_without_tag.split("""<div class="page">""")[1:]
+		# return text_pages
+		##########
+	file_id = os.path.basename(filename).replace(' ','_')+'.pdf'
+	doc_id = get_uri_from_txt(os.path.basename(filename))
+	######
+	page_content_list = pdf_to_text(filename+'.pdf')
+	page_content_list = list(map(lambda x: clean_content(x, remove_footnote=True), page_content_list))
+	######
+	paragraph_dict_list = []
+	last_page_paragraph = None
+	for i,content in enumerate(page_content_list):
+		base_id = f'{doc_id}_{i}'
+		merge_with_last_paragraph = False
+		if last_page_paragraph:
+			last_char = last_page_paragraph[-1]
+			if last_char != '.' or last_char != '=' or last_char != '!':
+				merge_with_last_paragraph = True
+				# print(last_char, last_page_paragraph)
+		for paragraph in content.split('\n\n'):
+			paragraph = paragraph.strip()
+			if not paragraph:
+				continue
+			if merge_with_last_paragraph:
+				merge_with_last_paragraph = False
+				last_paragraph_dict = paragraph_dict_list[-1]
+				last_paragraph_dict['text'] += ' '+paragraph
+				# edit annotation
+				new_base_id = f'{doc_id}_{i-1}_{i}'
+				last_paragraph_annotation = last_paragraph_dict['annotation']
+				last_paragraph_annotation['root'] = f'{ANONYMOUS_PREFIX}{new_base_id}_0'
+				last_paragraph_annotation['content'] = jsonld_to_triples({'my:page_id': f'{i} - {i+1}'}, new_base_id)
+				continue
+			paragraph_dict_list.append({
+				'text': paragraph,
+				'id': file_id,
+				'annotation': {
+					'root': f'{ANONYMOUS_PREFIX}{base_id}_0',
+					'content': jsonld_to_triples({'my:page_id': f'{i+1}'}, base_id),
+				}
+			})
+			last_page_paragraph = paragraph
+	return paragraph_dict_list
 
 def read_akn_file(filename):
 	file_id = os.path.basename(filename).replace(' ','_')
