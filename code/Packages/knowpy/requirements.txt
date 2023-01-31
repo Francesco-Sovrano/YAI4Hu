@@ -21,6 +21,7 @@ scikit-learn==0.23.2
 scipy==1.4.1
 wordcloud==1.7.0 # graphics
 tika==1.24 # pdf to txt
+pdfminer # pdf to txt
 matplotlib==3.3.2 # graphics
 pydotplus==2.0.2 # graphs
 networkx==2.5 # graphs
